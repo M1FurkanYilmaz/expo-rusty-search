@@ -32,6 +32,30 @@ public class ExpoRustySearchModule: Module {
       ])
     }
 
+    // Helper to handle Rust string pointers safely
+    func rustToString(_ ptr: UnsafePointer<Int8>?) -> String {
+      guard let ptr = ptr else { return "" }
+      let result = String(cString: ptr)
+      free_string(UnsafeMutablePointer(mutating: ptr)) // Free Rust memory after copy
+      return result
+    }
+
+    AsyncFunction("initializeIndex") { (indexPath: String) -> String in
+      return rustToString(initialize_index(indexPath))
+    }
+
+    AsyncFunction("addDocument") { (title: String, body: String) -> String in
+      return rustToString(add_document(title, body))
+    }
+
+    AsyncFunction("search") { (query: String) -> String in
+      return rustToString(search_basic(query))
+    }
+
+    AsyncFunction("getDocumentCount") { () -> String in
+      return rustToString(get_document_count())
+    }
+
     // Enables the module to be used as a native view. Definition components that are accepted as part of the
     // view definition: Prop, Events.
     View(ExpoRustySearchView.self) {

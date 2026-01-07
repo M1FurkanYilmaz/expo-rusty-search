@@ -55,3 +55,7 @@ yarn-error.log
 
 # Expo
 .expo/*
+
+
+#Rust
+expo-search-core/target/

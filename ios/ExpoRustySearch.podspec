@@ -26,4 +26,6 @@ Pod::Spec.new do |s|
   }
 
   s.source_files = "**/*.{h,m,mm,swift,hpp,cpp}"
+
+  s.vendored_libraries = '../expo-search-core/target/aarch64-apple-ios-sim/release/libexpo_search_core.a'
 end

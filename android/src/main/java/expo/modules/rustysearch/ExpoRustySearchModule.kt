@@ -5,16 +5,21 @@ import expo.modules.kotlin.modules.ModuleDefinition
 import java.net.URL
 
 class ExpoRustySearchModule : Module() {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
+  private external fun initializeIndex(indexPath: String): String
+  private external fun addDocument(title: String, body: String): String
+  private external fun searchBasic(query: String): String
+  private external fun getDocumentCount(): String
+
+  companion object {
+    init {
+      // Use your actual crate name from Cargo.toml here
+      System.loadLibrary("expo_search_core") 
+    }
+  }
+
   override fun definition() = ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ExpoRustySearch')` in JavaScript.
     Name("ExpoRustySearch")
 
-    // Defines constant property on the module.
     Constant("PI") {
       Math.PI
     }
@@ -34,6 +39,22 @@ class ExpoRustySearchModule : Module() {
       sendEvent("onChange", mapOf(
         "value" to value
       ))
+    }
+
+    AsyncFunction("initializeIndex") { indexPath: String ->
+      initializeIndex(indexPath)
+    }
+
+    AsyncFunction("addDocument") { title: String, body: String ->
+      addDocument(title, body)
+    }
+
+    AsyncFunction("search") { query: String ->
+      searchBasic(query)
+    }
+
+    AsyncFunction("getDocumentCount") {
+      getDocumentCount()
     }
 
     // Enables the module to be used as a native view. Definition components that are accepted as part of
