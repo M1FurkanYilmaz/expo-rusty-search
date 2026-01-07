@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android", "web"],
+  "apple": {
+    "modules": ["ExpoRustySearchModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.rustysearch.ExpoRustySearchModule"]
+  }
+}

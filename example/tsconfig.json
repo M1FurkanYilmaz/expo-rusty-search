@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "expo-rusty-search": ["../src/index"],
+      "expo-rusty-search/*": ["../src/*"]
+    }
+  }
+}
