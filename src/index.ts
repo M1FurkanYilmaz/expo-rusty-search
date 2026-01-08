@@ -1,5 +1,58 @@
-// Reexport the native module. On web, it will be resolved to ExpoRustySearchModule.web.ts
-// and on native platforms to ExpoRustySearchModule.ts
-export { default } from './ExpoRustySearchModule';
-export { default as ExpoRustySearchView } from './ExpoRustySearchView';
-export * from  './ExpoRustySearch.types';
+import { NativeModule, requireNativeModule } from "expo";
+import type { StyleProp, ViewStyle } from "react-native";
+
+export type OnLoadEventPayload = {
+  url: string;
+};
+
+export type ExpoRustySearchModuleEvents = {
+  onChange: (params: ChangeEventPayload) => void;
+};
+
+export type ChangeEventPayload = {
+  value: string;
+};
+
+export type ExpoRustySearchViewProps = {
+  url: string;
+  onLoad: (event: { nativeEvent: OnLoadEventPayload }) => void;
+  style?: StyleProp<ViewStyle>;
+};
+
+export type SearchResult = {
+  title: string;
+  body: string;
+  score: number;
+};
+
+export type Document = {
+  title: string;
+  body: string;
+};
+
+declare class ExpoRustySearchModule extends NativeModule<ExpoRustySearchModuleEvents> {
+  // Rust search functions
+  initializeIndex(): Promise<string>;
+  clearIndex(): Promise<string>;
+  addDocument(title: string, body: string): Promise<string>;
+  addDocumentsBulk(json: string): Promise<string>;
+  searchDocuments(query: string): Promise<string>;
+  getDocumentCount(): Promise<string>;
+
+  // Existing methods
+  PI: number;
+  hello(): string;
+  setValueAsync(value: string): Promise<void>;
+}
+
+const ExpoRustySearch =
+  requireNativeModule<ExpoRustySearchModule>("ExpoRustySearch");
+
+export const {
+  initializeIndex,
+  clearIndex,
+  addDocument,
+  searchDocuments,
+  addDocumentsBulk,
+  getDocumentCount,
+} = ExpoRustySearch;

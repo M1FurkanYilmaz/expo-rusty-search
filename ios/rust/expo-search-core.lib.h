@@ -4,15 +4,19 @@
 #include <stdlib.h>
 
 /**
- * Initialize or load the index from disk
- * Parameters:
- *   - index_path_ptr: C string pointer to the directory path where index should be stored
+ * Initialize a new in-memory index
  * Returns: Success or error message
  */
-const char *initialize_index(const char *index_path_ptr);
+const char *initialize_index(void);
 
 /**
- * Function to add a document to the index
+ * Clear the index and reinitialize it
+ * This is useful when you want to rebuild the index from scratch
+ */
+const char *clear_index(void);
+
+/**
+ * Add a single document to the index
  * Parameters:
  *   - title_ptr: C string pointer to the document title
  *   - body_ptr: C string pointer to the document body
@@ -21,12 +25,20 @@ const char *initialize_index(const char *index_path_ptr);
 const char *add_document(const char *title_ptr, const char *body_ptr);
 
 /**
- * Function to search through all added documents
+ * Add multiple documents at once from a JSON array
+ * Parameters:
+ *   - json_ptr: C string pointer to JSON array like [{"title":"..","body":".."}, ...]
+ * Returns: Success message with count or error message
+ */
+const char *add_documents_bulk(const char *json_ptr);
+
+/**
+ * Search through all indexed documents
  * Parameters:
  *   - query_ptr: C string pointer to the search query
- * Returns: Search results or error message
+ * Returns: JSON array of search results
  */
-const char *search_basic(const char *query_ptr);
+const char *search_documents(const char *query_ptr);
 
 /**
  * Get the number of documents in the index
