@@ -18,6 +18,7 @@ import {
   getDocumentCount,
   initializeIndex,
   searchDocuments,
+  DocumentType,
 } from "expo-rusty-search";
 
 const STORAGE_KEY = "@search_documents";
@@ -78,7 +79,7 @@ export default function App() {
   }, []);
 
   // Save documents to AsyncStorage
-  const saveDocumentsToStorage = async (docs: Document[]) => {
+  const saveDocumentsToStorage = async (docs: DocumentType[]) => {
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(docs));
     } catch (error) {
@@ -87,7 +88,7 @@ export default function App() {
   };
 
   // Get all documents from AsyncStorage
-  const getDocumentsFromStorage = async (): Promise<Document[]> => {
+  const getDocumentsFromStorage = async (): Promise<DocumentType[]> => {
     try {
       const savedDocsJson = await AsyncStorage.getItem(STORAGE_KEY);
       if (savedDocsJson) {
@@ -106,7 +107,7 @@ export default function App() {
     }
 
     try {
-      const newDoc: Document = {
+      const newDoc: DocumentType = {
         title: `Test Document ${count + 1}`,
         body: "This is a test document sent to Rust. It contains searchable content about programming and testing.",
       };
@@ -137,7 +138,7 @@ export default function App() {
     }
 
     try {
-      const newDocs: Document[] = [
+      const newDocs: DocumentType[] = [
         {
           title: "Introduction to Rust",
           body: "Rust is a systems programming language focused on safety and performance.",

@@ -25,7 +25,7 @@ export type SearchResult = {
   score: number;
 };
 
-export type Document = {
+export type DocumentType = {
   title: string;
   body: string;
 };
