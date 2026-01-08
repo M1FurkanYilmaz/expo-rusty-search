@@ -1,73 +1,63 @@
-import { useEvent } from 'expo';
-import ExpoRustySearch, { ExpoRustySearchView } from 'expo-rusty-search';
-import { Button, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  FlatList,
+  StyleSheet,
+} from "react-native";
+import Search from "expo-rusty-search";
 
 export default function App() {
-  const onChangePayload = useEvent(ExpoRustySearch, 'onChange');
+  const [results, setResults] = useState([]);
+  const [count, setCount] = useState("0");
+
+  const onAdd = async () => {
+    // 1. addDocument
+    await Search.addDocument("Test Title", "This is a string sent to Rust");
+  };
+
+  const onGetCount = async () => {
+    // 2. getDocumentCount
+    const c = await Search.getDocumentCount();
+    setCount(c);
+  };
+
+  const onSearch = async (text: string) => {
+    // 3. search
+    const rawJson = await Search.search(text);
+    setResults(JSON.parse(rawJson));
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
-        <Text style={styles.header}>Module API Example</Text>
-        <Group name="Constants">
-          <Text>{ExpoRustySearch.PI}</Text>
-        </Group>
-        <Group name="Functions">
-          <Text>{ExpoRustySearch.hello()}</Text>
-        </Group>
-        <Group name="Async functions">
-          <Button
-            title="Set value"
-            onPress={async () => {
-              await ExpoRustySearch.setValueAsync('Hello from JS!');
-            }}
-          />
-        </Group>
-        <Group name="Events">
-          <Text>{onChangePayload?.value}</Text>
-        </Group>
-        <Group name="Views">
-          <ExpoRustySearchView
-            url="https://www.example.com"
-            onLoad={({ nativeEvent: { url } }) => console.log(`Loaded: ${url}`)}
-            style={styles.view}
-          />
-        </Group>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+    <View style={styles.container}>
+      <Text style={styles.text}>Docs in Rust: {count}</Text>
 
-function Group(props: { name: string; children: React.ReactNode }) {
-  return (
-    <View style={styles.group}>
-      <Text style={styles.groupHeader}>{props.name}</Text>
-      {props.children}
+      <Button title="Add Document" onPress={onAdd} />
+      <Button title="Get Count" onPress={onGetCount} />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Search..."
+        onChangeText={onSearch}
+      />
+
+      <FlatList
+        data={results}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Text>{item}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 }
 
-const styles = {
-  header: {
-    fontSize: 30,
-    margin: 20,
-  },
-  groupHeader: {
-    fontSize: 20,
-    marginBottom: 20,
-  },
-  group: {
-    margin: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#eee',
-  },
-  view: {
-    flex: 1,
-    height: 200,
-  },
-};
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 60, gap: 20 },
+  text: { fontSize: 20, fontWeight: "bold" },
+  input: { borderBottomWidth: 1, padding: 10 },
+  item: { padding: 10, borderBottomWidth: 1, borderColor: "#ccc" },
+});
