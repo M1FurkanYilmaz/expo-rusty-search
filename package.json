@@ -19,6 +19,13 @@
     "build:ios:device": "tsx scripts/cargo-ios.ts -- --target=ios",
     "build:clean": "cd expo-search-core && cargo clean"
   },
+  "files": [
+    "build/",
+    "android/",
+    "ios/",
+    "app.plugin.js",
+    "expo-module.config.json"
+  ],
   "keywords": [
     "react-native",
     "expo",
